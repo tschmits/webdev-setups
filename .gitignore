@@ -1,0 +1,7 @@
+*~
+virtualenv
+*.pyc
+.vagrant
+local_settings.py
+\#*
+.#*

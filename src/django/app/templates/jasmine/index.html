@@ -1,0 +1,6 @@
+{% extends "jasmine/base.html" %}
+
+{% block jasmine_preload %}
+    {% include "_js_includes.html" %}
+    <script  src="{{ STATIC_URL }}/libs/mock-ajax-2.0.0.rc1.js"></script>
+{% endblock %}

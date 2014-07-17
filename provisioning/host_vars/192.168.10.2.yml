@@ -1,8 +1,7 @@
 ---
 db_server_ip: 127.0.0.1
-omtip_postgres_pass: app_user_pass
-omtip_sudo_pass: $6$fU3AKcwzkdcz$LW.ZKak.zhR5rsNnJLJU61TFGx6ozxQFdAvIdUEMQzs6uejXVkPEeaxXyjkG2uWev.Um4Q2j2Z21Xgp1Fe6q61 # app_user_pass
-postgresql_host: localhost
+django_postgres_pass: django_pass
+django_sudo_pass: $6$NrX.hj7Hzs5nmZve$I450zRRZp.xftLV2Z4Qjg59yDaNoym/Di7vGm9yUoSHrTOwv1yV3RYqLXNRBHv5kRWvZmuXZLjQPqyOuL6BHb1 # django_pass
 postgresql_port: 5432
 symlink_src: /vagrant/src
 wan_server_ip: 192.168.10.2

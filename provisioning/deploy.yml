@@ -1,6 +1,4 @@
 ---
-# With this playbook you can provision the vagrant box and the omtip DTAP servers.
-
 # Run the following command to provision the vagrant box:
 # ansible-playbook -vvvv -i provisioning/hosts.cfg provisioning/deploy.yml -u vagrant -K --limit vagrant --private-key=~/.vagrant.d/insecure_private_key
 
