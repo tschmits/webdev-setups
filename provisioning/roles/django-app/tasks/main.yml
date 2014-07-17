@@ -81,7 +81,7 @@
 
 - name: Copy local django settings
   sudo: yes
-  template: src=local_settings.py dest=/srv/django/src/django/app/local_settings.py owner=django group=users mode=0644
+  template: src=deploy_local_settings.py dest=/srv/django/src/django/app/local_settings.py owner=django group=users mode=0644
 
 # syncdb & migrate
 
