@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 80, host: 8000
   config.vm.network "private_network", ip: "192.168.10.2"
 
-  config.vm.synced_folder "src/", "/srv/app/src/"
+  config.vm.synced_folder "src/", "/srv/django/src/"
 
   config.vm.define "default", primary: true do |default|
     default.vm.provision :ansible do |ansible|
@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.inventory_path = "provisioning/hosts.cfg"
       ansible.verbose = "vvvv"
       ansible.limit = "vagrant"
-      ansible.ask_sudo_pass = false
+      ansible.ask_sudo_pass = true
     end
   end
 

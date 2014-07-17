@@ -10,4 +10,4 @@
   with_items:
     - vim
     - unzip
-
+    - dpkg

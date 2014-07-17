@@ -2,27 +2,27 @@
 
 # create app user
 
-- name: Create omtip user
+- name: Create django user
   sudo: yes
-  user: name=omtip generate_ssh_key=yes ssh_key_bits=2048 password={{omtip_sudo_pass}}
+  user: name=django generate_ssh_key=yes ssh_key_bits=2048 password={{django_sudo_pass}}
 
-- name: Copy .bashrc for omtip user
+- name: Copy .bashrc for django user
   sudo: yes
-  copy: src=bashrc dest=/home/omtip/.bashrc owner=omtip group=users mode=0644
+  copy: src=bashrc dest=/home/django/.bashrc owner=django group=users mode=0644
 
-- name: Copy etc-bash.bashrc for omtip user
+- name: Copy etc-bash.bashrc for django user
   sudo: yes
   copy: src=etc-bash.bashrc dest=/etc/bash.bashrc
 
 - name: Set bash as default shell
   sudo: yes
-  command: chsh -s /bin/bash omtip
+  command: chsh -s /bin/bash django
 
 # create app dir
 
 - name: Creates app directory
   sudo: yes
-  file: path=/srv/omtip state=directory owner=omtip group=users mode=0755
+  file: path=/srv/django state=directory owner=django group=users mode=0755
 
 # git checkout
 
@@ -31,68 +31,68 @@
   register: git_root
 
 - name: Creating archive
-  local_action: command chdir={{git_root['stdout']}} git archive --format zip --output /tmp/inter-ikea_project.zip HEAD
+  local_action: command chdir={{git_root['stdout']}} git archive --format zip --output /tmp/webdev-setup.zip HEAD
 
 - name: Creates tmp directory for unpack
   sudo: yes
-  file: path=/tmp/inter-ikea_project state=directory
+  file: path=/tmp/webdev-setup state=directory
 
 - name: Unpack release
   sudo: yes
-  unarchive: dest=/tmp/inter-ikea_project src=/tmp/inter-ikea_project.zip
+  unarchive: dest=/tmp/webdev-setup src=/tmp/webdev-setup.zip
 
-- name: Move release src to /srv/omtip/
+- name: Move release src to /srv/django/
   sudo: yes
-  command: cp -rf /tmp/inter-ikea_project/src /srv/omtip/
-
-- name: Move release manage.py to /srv/omtip/
-  sudo: yes
-  command: cp -rf /tmp/inter-ikea_project/manage.py /srv/omtip/
+  command: cp -rf /tmp/webdev-setup/src /srv/django/
 
 - name: Chown the app dir
   sudo: yes
-  file: path=/srv/omtip owner=omtip group=users recurse=yes
+  file: path=/srv/django owner=django group=users recurse=yes
 
 # install requirements
 
 - name: Copy requirements.txt
   sudo: yes
-  copy: src=requirements.txt dest=/srv/omtip/omtip_requirements.txt owner=omtip group=users mode=0644
+  copy: src=requirements.txt dest=/srv/django/django_requirements.txt owner=django group=users mode=0644
 
-- name: Pip install omtip_requirements.txt
+- name: Pip install django_requirements.txt
   sudo: yes
-  pip: requirements=/srv/omtip/omtip_requirements.txt virtualenv=/srv/omtip/venv
+  pip: requirements=/srv/django/django_requirements.txt virtualenv=/srv/django/venv
 
 - name: Chown the venv
   sudo: yes
-  file: path=/srv/omtip/venv owner=omtip group=users recurse=yes
+  file: path=/srv/django/venv owner=django group=users recurse=yes
 
 # create app dirs
 
 - name: Copy ckeditor test fileset
   sudo: yes
-  copy: src=media dest=/srv/omtip/venv/local/lib/python2.7/site-packages/ckeditor owner=omtip group=users
+  copy: src=media dest=/srv/django/venv/local/lib/python2.7/site-packages/ckeditor owner=django group=users
 
-- name: Creates ckeditor upload directory
+- name: Create ckeditor upload directory
   sudo: yes
-  file: path=/srv/omtip/src/omtip/omtip/media/ckeditor_uploads state=directory owner=omtip group=users mode=0777
+  file: path=/srv/django/src/django/app/media/ckeditor_uploads state=directory owner=django group=users mode=0777
+
+- name: Create static dir
+  sudo: yes
+  file: path=/srv/django/src/django/app/static state=directory owner=django group=users mode=0755
 
 # copy local settings
 
 - name: Copy local django settings
   sudo: yes
-  template: src=local_settings.py dest=/srv/omtip/src/omtip/omtip/local_settings.py owner=omtip group=users mode=0644
+  template: src=local_settings.py dest=/srv/django/src/django/app/local_settings.py owner=django group=users mode=0644
 
 # syncdb & migrate
 
 - name: Django syncdb
   sudo: yes
-  django_manage: command=syncdb app_path=/srv/omtip/src/omtip/ virtualenv=/srv/omtip/venv/
+  django_manage: command=syncdb app_path=/srv/django/src/django/ virtualenv=/srv/django/venv/
 
 - name: Django migrate
   sudo: yes
-  django_manage: command=migrate app_path=/srv/omtip/src/omtip/ virtualenv=/srv/omtip/venv/
+  django_manage: command=migrate app_path=/srv/django/src/django/ virtualenv=/srv/django/venv/
 
 - name: Django collectstatic
   sudo: yes
-  django_manage: command=collectstatic app_path=/srv/omtip/src/omtip/ virtualenv=/srv/omtip/venv/
+  django_manage: command=collectstatic app_path=/srv/django/src/django/ virtualenv=/srv/django/venv/
