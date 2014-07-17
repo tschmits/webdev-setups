@@ -1,0 +1,98 @@
+# ---
+
+# create app user
+
+- name: Create omtip user
+  sudo: yes
+  user: name=omtip generate_ssh_key=yes ssh_key_bits=2048 password={{omtip_sudo_pass}}
+
+- name: Copy .bashrc for omtip user
+  sudo: yes
+  copy: src=bashrc dest=/home/omtip/.bashrc owner=omtip group=users mode=0644
+
+- name: Copy etc-bash.bashrc for omtip user
+  sudo: yes
+  copy: src=etc-bash.bashrc dest=/etc/bash.bashrc
+
+- name: Set bash as default shell
+  sudo: yes
+  command: chsh -s /bin/bash omtip
+
+# create app dir
+
+- name: Creates app directory
+  sudo: yes
+  file: path=/srv/omtip state=directory owner=omtip group=users mode=0755
+
+# git checkout
+
+- name: Get git root dir
+  local_action: command git rev-parse --show-toplevel
+  register: git_root
+
+- name: Creating archive
+  local_action: command chdir={{git_root['stdout']}} git archive --format zip --output /tmp/inter-ikea_project.zip HEAD
+
+- name: Creates tmp directory for unpack
+  sudo: yes
+  file: path=/tmp/inter-ikea_project state=directory
+
+- name: Unpack release
+  sudo: yes
+  unarchive: dest=/tmp/inter-ikea_project src=/tmp/inter-ikea_project.zip
+
+- name: Move release src to /srv/omtip/
+  sudo: yes
+  command: cp -rf /tmp/inter-ikea_project/src /srv/omtip/
+
+- name: Move release manage.py to /srv/omtip/
+  sudo: yes
+  command: cp -rf /tmp/inter-ikea_project/manage.py /srv/omtip/
+
+- name: Chown the app dir
+  sudo: yes
+  file: path=/srv/omtip owner=omtip group=users recurse=yes
+
+# install requirements
+
+- name: Copy requirements.txt
+  sudo: yes
+  copy: src=requirements.txt dest=/srv/omtip/omtip_requirements.txt owner=omtip group=users mode=0644
+
+- name: Pip install omtip_requirements.txt
+  sudo: yes
+  pip: requirements=/srv/omtip/omtip_requirements.txt virtualenv=/srv/omtip/venv
+
+- name: Chown the venv
+  sudo: yes
+  file: path=/srv/omtip/venv owner=omtip group=users recurse=yes
+
+# create app dirs
+
+- name: Copy ckeditor test fileset
+  sudo: yes
+  copy: src=media dest=/srv/omtip/venv/local/lib/python2.7/site-packages/ckeditor owner=omtip group=users
+
+- name: Creates ckeditor upload directory
+  sudo: yes
+  file: path=/srv/omtip/src/omtip/omtip/media/ckeditor_uploads state=directory owner=omtip group=users mode=0777
+
+# copy local settings
+
+- name: Copy local django settings
+  sudo: yes
+  template: src=local_settings.py dest=/srv/omtip/src/omtip/omtip/local_settings.py owner=omtip group=users mode=0644
+
+# syncdb & migrate
+
+- name: Django syncdb
+  sudo: yes
+  django_manage: command=syncdb app_path=/srv/omtip/src/omtip/ virtualenv=/srv/omtip/venv/
+
+- name: Django migrate
+  sudo: yes
+  django_manage: command=migrate app_path=/srv/omtip/src/omtip/ virtualenv=/srv/omtip/venv/
+
+- name: Django collectstatic
+  sudo: yes
+  django_manage: command=collectstatic app_path=/srv/omtip/src/omtip/ virtualenv=/srv/omtip/venv/

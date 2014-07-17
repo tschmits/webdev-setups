@@ -1,0 +1,34 @@
+---
+
+- name: Install Apache2 and nginx
+  sudo: yes
+  apt: name={{item}} state=present
+  with_items:
+    - apache2
+    - libapache2-mod-wsgi
+    - nginx
+
+- name: Copy apache2 apache2.conf file
+  sudo: yes
+  copy: src=apache2.conf dest=/etc/apache2/apache2.conf mode=0644
+  notify: restart apache2
+
+- name: Copy apache2 default file
+  sudo: yes
+  copy: src=default-apache2 dest=/etc/nginx/sites-available/default mode=0644
+  notify: restart apache2
+
+- name: Copy apache2 ports.conf file
+  sudo: yes
+  copy: src=ports.conf dest=/etc/apache2/ports.conf mode=0644
+  notify: restart apache2
+
+- name: Copy nginx nginx.conf file
+  sudo: yes
+  copy: src=nginx.conf dest=/etc/nginx/nginx.conf mode=0644
+  notify: restart nginx
+
+- name: Copy nginx default file
+  sudo: yes
+  template: src=default-nginx dest=/etc/nginx/sites-available/default mode=0644
+  notify: restart nginx

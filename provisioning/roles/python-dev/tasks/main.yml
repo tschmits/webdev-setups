@@ -1,0 +1,36 @@
+---
+
+- name: Python dev packages
+  sudo: yes
+  apt: name={{item}} state=present
+  with_items:
+    - build-essential
+    - python
+    - python-dev
+    - python-setuptools
+    - python-pip
+    - python-psycopg2
+    - libpq-dev
+
+- name: Dependencies for image processing with PIL
+  sudo: yes
+  apt: name={{item}} state=present
+  with_items:
+    - libjpeg8-dev
+    - libtiff5-dev
+    - zlib1g-dev
+    - libfreetype6-dev
+    - liblcms1-dev
+
+- name: Install pip
+  sudo: yes
+  easy_install: name=pip
+
+- name: Install virtualenv
+  sudo: yes
+  easy_install: name={{item}}
+  with_items:
+  - virtualenv
+  - virtualenvwrapper
+  - stevedore
+  - virtualenv-clone

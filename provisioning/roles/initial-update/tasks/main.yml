@@ -1,0 +1,13 @@
+---
+
+- name: Initial update
+  sudo: yes
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Install useful tools
+  sudo: yes
+  apt: name={{item}} state=present
+  with_items:
+    - vim
+    - unzip
+

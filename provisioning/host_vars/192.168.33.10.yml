@@ -1,0 +1,9 @@
+---
+db_server_ip: 127.0.0.1
+omtip_postgres_pass: omtip_pass
+omtip_sudo_pass: $6$NDC15TDU0D$MZhdgCiEck.j9dRhHJF6QmxrVgaYWabtV2KJmAQpYGXpxKMXQ4qt/zEVvF8WUJ.9Gjxs65jdGkSm.bfaXw/Eu1
+postgresql_host: localhost
+postgresql_port: 5432
+symlink_src: /vagrant/src
+web_server_ip: 127.0.0.1
+wan_server_ip: 192.168.33.10

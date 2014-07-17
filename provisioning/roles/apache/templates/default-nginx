@@ -1,0 +1,20 @@
+server {
+    listen 80;
+    server_name {{wan_server_ip}};
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+    location /static/ { # STATIC_URL
+        alias /srv/omtip/src/omtip/omtip/site_media/; # STATIC_ROOT
+        expires 30d;
+    }
+
+    location /media/ { # MEDIA_URL
+        alias /srv/omtip/src/omtip/omtip/media/; # MEDIA_ROOT
+        expires 30d;
+    }
+
+    location / {
+    	proxy_pass http://127.0.0.1:81;
+    }
+}

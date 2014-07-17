@@ -1,0 +1,54 @@
+---
+
+# create app user
+
+- name: Create omtip user
+  sudo: yes
+  user: name=omtip generate_ssh_key=yes ssh_key_bits=2048 password={{omtip_sudo_pass}}
+
+- name: Copy .bashrc for omtip user
+  sudo: yes
+  copy: src=bashrc dest=/home/omtip/.bashrc owner=omtip group=users mode=0644
+
+- name: Copy etc-bash.bashrc for omtip user
+  sudo: yes
+  copy: src=etc-bash.bashrc dest=/etc/bash.bashrc
+
+- name: Set bash as default shell
+  sudo: yes
+  command: chsh -s /bin/bash omtip
+
+# PostgreSQL install
+
+- name: Install Postgres
+  sudo: yes
+  apt: name={{item}} state=present
+  with_items:
+    - postgresql-9.1
+    - libpq-dev
+    - python-psycopg2
+
+- name: Copy pg_hba.conf
+  sudo: yes
+  template: src=pg_hba.conf dest=/etc/postgresql/9.1/main/pg_hba.conf mode=0644
+
+- name: Copy postgresql.conf
+  sudo: yes
+  template: src=postgresql.conf dest=/etc/postgresql/9.1/main/postgresql.conf mode=0644
+
+- name: Restart postgresql
+  sudo: yes
+  service: name=postgresql state=restarted
+
+# PostgreSQL database creation
+
+- name: Create omtip database
+  sudo: yes
+  sudo_user: postgres
+  postgresql_db: name=omtip_db state=present template=template0 encoding=UTF-8 lc_collate=en_US.UTF-8 lc_ctype=en_US.UTF-8
+
+- name: Create omtip database role
+  sudo: yes
+  sudo_user: postgres
+  postgresql_user: db=omtip_db name=omtip password={{omtip_postgres_pass}} priv=ALL role_attr_flags=CREATEDB,NOSUPERUSER
+
