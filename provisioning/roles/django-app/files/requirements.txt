@@ -6,6 +6,8 @@ django-compressor
 django-debug-toolbar
 django-devserver
 django-jasmine
+django-userena
+easy-thumbnails
 fabric
 flake8
 gunicorn

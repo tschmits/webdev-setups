@@ -11,21 +11,21 @@ admin.autodiscover()
 
 urlpatterns = patterns('', *(
     url(r'^admin/', include(admin.site.urls)),
+
+    # this overrides the url with a custom template
+    url(r'^accounts/signin/$', 'userena.views.signin', {
+        'template_name': 'accounts/signin_form.html'}, name="signin"),
+    url(r'^accounts/', include('userena.urls')),
 ))
+
 
 if settings.DEBUG:
     urlpatterns += patterns('', *(
         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root': settings.MEDIA_ROOT}),
     ))
-else:
-    urlpatterns += patterns('', *(
-    ))
-
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-urlpatterns += staticfiles_urlpatterns()
-
-if settings.DEBUG:
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+    urlpatterns += staticfiles_urlpatterns()
     urlpatterns += patterns('', *(
         url(r'^jasmine/', include('django_jasmine.urls')),
     ))
