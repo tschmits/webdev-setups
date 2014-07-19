@@ -107,7 +107,7 @@ INSTALLED_APPS = (
     'userena',
     'guardian',
     'easy_thumbnails',
-    'accounts'
+    'app.accounts'
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
