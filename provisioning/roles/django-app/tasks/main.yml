@@ -29,25 +29,37 @@
 - name: Get git root dir
   local_action: command git rev-parse --show-toplevel
   register: git_root
+  tags:
+    - src
 
 - name: Creating archive
   local_action: command chdir={{git_root['stdout']}} git archive --format zip --output /tmp/webdev-setup.zip HEAD
+  tags:
+    - src
 
 - name: Creates tmp directory for unpack
   sudo: yes
   file: path=/tmp/webdev-setup state=directory
+  tags:
+    - src
 
 - name: Unpack release
   sudo: yes
   unarchive: dest=/tmp/webdev-setup src=/tmp/webdev-setup.zip
+  tags:
+    - src
 
 - name: Move release src to /srv/django/
   sudo: yes
   command: cp -rf /tmp/webdev-setup/src /srv/django/
+  tags:
+    - src
 
 - name: Chown the app dir
   sudo: yes
   file: path=/srv/django owner=django group=users recurse=yes
+  tags:
+    - src
 
 # install requirements
 
