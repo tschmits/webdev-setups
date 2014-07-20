@@ -13,7 +13,7 @@ define(function(require, exports, module) {
     });
 
     var surface = new Surface({
-        size: [150,80],
+        size: [200,80],
         classes: ["red-bg"],
         content: '<h1>main.index</h1>',
         properties: {
