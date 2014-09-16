@@ -1,7 +1,36 @@
 html {
 	font-family: 'sofia_pro_lightregular';
-	background-color: #fa5c4f; color: white;
+	color: white;
 }
 
-.red-bg { background-color: #fa5c4f; color: white; }
-.grey-bg { background-color: #404040; color: white; }
+table, th, tr, td {
+	margin: 0;
+	padding: 0;
+	border-spacing: 0;
+	border-collapse: separate;
+}
+td {
+	padding: 5px;
+}
+
+input[type="text"], input[type="password"], input[type="submit"] {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	border-radius: 3px;
+}
+input[type="text"], input[type="password"] {
+	width: 107px;
+	padding: 0 5px;
+}
+input[type="submit"] {
+	width: 100%;
+	cursor: pointer;
+}
+td.error {
+	font-weight: bold;
+}
+
+.primary-bg { background-color: #a0a0a0; color: white; }
+.secondary-bg { background-color: #f2f2f2; color: white; }

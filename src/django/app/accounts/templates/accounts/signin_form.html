@@ -1,32 +1,43 @@
-{% extends 'accounts/base_userena.html' %}
+{% extends 'main/base.html' %}
 {% load i18n %}
-{% load url from future %}
 
-{% block title %}{% trans "Signin" %}{% endblock %}
+{% block meta %}<meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />{% endblock %}
 
-{% block content %}
-<form action="" method="post">
-  {% csrf_token %}
-  <fieldset>
-    <legend>{% trans "Signin" %}</legend>
-    {{ form.non_field_errors }}
-    {% for field in form %}
-    {{ field.errors }}
-    {% comment %} Displaying checkboxes differently {% endcomment %}
-    {% if field.name == 'remember_me' %}
-    <p class="checkbox">
-    <label for="id_{{ field.name }}">{{ field }} {{ field.label }}</label>
-    </p>
-    {% else %}
-    <p>
-    {{ field.label_tag }}
-    {{ field }}
-    </p>
-    {% endif %}
-    {% endfor %}
-  </fieldset>
-  <input type="submit" value="{% trans "Signin" %}" />
-  <p class="forgot-password"><a href="{% url 'userena_password_reset' %}" title="{% trans 'Forgot your password?' %}">{% trans "Forgot your password?" %}</a></p>
-  {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
-</form>
+{% block link %}<link rel="stylesheet" type="text/css" href="http://code.famo.us/famous/0.2/famous.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/fonts.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/app.css" />{% endblock %}
+
+{% block script %}<script type="text/javascript" src="http://code.famo.us/lib/functionPrototypeBind.js"></script>
+<script type="text/javascript" src="http://code.famo.us/lib/classList.js"></script>
+<script type="text/javascript" src="http://code.famo.us/lib/requestAnimationFrame.js"></script>
+<script type="text/javascript" src="http://code.famo.us/lib/require.js"></script>
+<script type="text/javascript" src="http://code.famo.us/famous/0.2/famous.min.js"></script>
+<script type="text/javascript">
+  require.config({baseUrl: '/static/js/'});
+  require(['signin_form']);
+</script>{% endblock %}
+
+{% block body %}
+<div id="signin_form_container">
+    <form id="signin_form" action="" method="post" style="display:none;">
+        {% csrf_token %}
+        <!-- {{ form.non_field_errors }} -->
+        <table>
+            {% for field in form %}
+                <tr>
+                    <td {% if field.errors %}class="error"{% endif %}> {{ field.label_tag }} </td>
+                    <td> {{ field }} </td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <td colspan="2"><input type="submit" value="{% trans "Signin" %}" onclick="document.forms['signin_form'].submit();" /></td>
+                </tr>
+        </table>
+
+        {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
+    </form>
+</div>
 {% endblock %}

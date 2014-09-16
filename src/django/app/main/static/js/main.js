@@ -40,8 +40,9 @@ define(function(require, exports, module) {
     var lightbox = new Lightbox(lightboxOptions);
 
     var slideContents = [
-        '<h1 style="margin:0">Hello!</h1>',
+        '<h1 style="margin:0">Hi!</h1>',
         '<h1 style="margin:0">Welcome!</h1>',
+        '<h1 style="margin:0">Click!</h1>',
     ];
 
     for (var i = 0; i < slideContents.length; i++) {
@@ -49,7 +50,7 @@ define(function(require, exports, module) {
 
         var surface = new Surface({
             size: [180, 180],
-            classes: ["red-bg"],
+            classes: ["primary-bg"],
             content: content,
             properties: {
                 lineHeight: '175px',

@@ -14,6 +14,7 @@ urlpatterns = patterns('', *(
     # this overrides the url with a custom template
     url(r'^accounts/signin/$', 'userena.views.signin', {
         'template_name': 'accounts/signin_form.html'}, name="signin"),
+
     url(r'^accounts/', include('userena.urls')),
 
 ))
